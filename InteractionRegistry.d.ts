@@ -2,18 +2,19 @@ import {
   EntityRegistry,
   IEntityRegistry,
 } from '@civ-clone/core-registry/EntityRegistry';
-import Interaction from './Interaction';
+import { IInteraction } from './Interaction';
 import Player from '@civ-clone/core-player/Player';
-export interface IInteractionRegistry extends IEntityRegistry<Interaction> {
-  getByPlayer(player: Player): Interaction[];
-  getByPlayers(...players: Player[]): Interaction[];
+export interface IInteractionRegistry extends IEntityRegistry<IInteraction> {
+  getByPlayer(player: Player): IInteraction[];
+  getByPlayers(...players: Player[]): IInteraction[];
 }
 export declare class InteractionRegistry
-  extends EntityRegistry<Interaction>
-  implements IInteractionRegistry {
+  extends EntityRegistry<IInteraction>
+  implements IInteractionRegistry
+{
   constructor();
-  getByPlayer(player: Player): Interaction[];
-  getByPlayers(...players: Player[]): Interaction[];
+  getByPlayer(player: Player): IInteraction[];
+  getByPlayers(...players: Player[]): IInteraction[];
 }
 export declare const instance: InteractionRegistry;
 export default InteractionRegistry;

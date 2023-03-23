@@ -5,7 +5,7 @@ const EntityRegistry_1 = require("@civ-clone/core-registry/EntityRegistry");
 const Interaction_1 = require("./Interaction");
 class InteractionRegistry extends EntityRegistry_1.EntityRegistry {
     constructor() {
-        super(Interaction_1.default);
+        super(Interaction_1.Interaction);
     }
     getByPlayer(player) {
         return this.entries().filter((interaction) => interaction.players().includes(player));

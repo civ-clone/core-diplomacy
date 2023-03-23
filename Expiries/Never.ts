@@ -1,10 +1,12 @@
-import { Expiry, IExpiry } from '../Expiry';
+import Expiry from '../Expiry';
 
-export interface INever extends IExpiry {}
-
-export class Never extends Expiry implements INever {
+export class Never extends Expiry {
   constructor() {
     super(Infinity);
+  }
+
+  expired(): boolean {
+    return false;
   }
 }
 

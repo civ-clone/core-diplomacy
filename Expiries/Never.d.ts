@@ -1,6 +1,6 @@
-import { Expiry, IExpiry } from '../Expiry';
-export interface INever extends IExpiry {}
-export declare class Never extends Expiry implements INever {
+import Expiry from '../Expiry';
+export declare class Never extends Expiry {
   constructor();
+  expired(): boolean;
 }
 export default Never;

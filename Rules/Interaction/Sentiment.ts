@@ -1,0 +1,6 @@
+import Proposal from '../../Negotiation/Proposal';
+import Rule from '@civ-clone/core-rule/Rule';
+
+export class Sentiment extends Rule<[proposal: Proposal], number> {}
+
+export default Sentiment;
