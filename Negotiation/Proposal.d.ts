@@ -6,7 +6,7 @@ import Player from '@civ-clone/core-player/Player';
 export interface IProposal extends IAction {
   choices(): IResolution[];
   resolution(): Resolution | null;
-  resolve(resolution: Resolution): void;
+  resolve(resolution: Resolution): Promise<void>;
   resolved(): boolean;
 }
 export declare class Proposal extends Action implements IProposal {
@@ -18,7 +18,7 @@ export declare class Proposal extends Action implements IProposal {
   );
   choices(): IResolution[];
   resolution(): Resolution | null;
-  resolve(resolution: Resolution): void;
+  resolve(resolution: Resolution): Promise<void>;
   resolved(): boolean;
 }
 export default Proposal;

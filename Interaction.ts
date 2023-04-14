@@ -44,9 +44,9 @@ export class Interaction extends DataObject implements IInteraction {
 
     this.#when = this.#turn.value();
 
-    this.addKey('players');
+    this.addKey('players', 'when');
 
-    this.#ruleRegistry.process(Created, this);
+    this.#ruleRegistry.process(Created, this as Interaction);
   }
 
   isBetween(...players: Player[]): boolean {

@@ -29,9 +29,9 @@ class Proposal extends Action_1.Action {
     resolution() {
         return __classPrivateFieldGet(this, _Proposal_resolution, "f");
     }
-    resolve(resolution) {
+    async resolve(resolution) {
         __classPrivateFieldSet(this, _Proposal_resolution, resolution, "f");
-        this.ruleRegistry().process(Resolved_1.default, resolution, this);
+        await Promise.all(this.ruleRegistry().process(Resolved_1.default, resolution, this));
     }
     resolved() {
         return __classPrivateFieldGet(this, _Proposal_resolution, "f") !== null;

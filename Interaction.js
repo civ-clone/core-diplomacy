@@ -37,7 +37,7 @@ class Interaction extends DataObject_1.DataObject {
             }
         });
         __classPrivateFieldSet(this, _Interaction_when, __classPrivateFieldGet(this, _Interaction_turn, "f").value(), "f");
-        this.addKey('players');
+        this.addKey('players', 'when');
         __classPrivateFieldGet(this, _Interaction_ruleRegistry, "f").process(Created_1.default, this);
     }
     isBetween(...players) {

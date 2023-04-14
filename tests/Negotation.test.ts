@@ -1,10 +1,14 @@
 import Accept from '../Proposal/Accept';
+import Advance from '@civ-clone/core-science/Advance';
+import AdvanceRegistry from '@civ-clone/core-science/AdvanceRegistry';
+import Alphabet from '@civ-clone/base-science-advance-alphabet/Alphabet';
+import BronzeWorking from '@civ-clone/base-science-advance-bronzeworking/BronzeWorking';
 import Criterion from '@civ-clone/core-rule/Criterion';
 import Declaration from '../Declaration';
 import Decline from '../Proposal/Decline';
 import Dialogue from '../Negotiation/Dialogue';
 import Effect from '@civ-clone/core-rule/Effect';
-import { Action, IAction } from '../Negotiation/Action';
+import { IAction } from '../Negotiation/Action';
 import { IConstructor } from '@civ-clone/core-registry/Registry';
 import { IInteraction } from '../Interaction';
 import Initiate from '../Negotiation/Initiate';
@@ -13,6 +17,9 @@ import InteractionRegistry from '../InteractionRegistry';
 import Negotiation from '../Negotiation';
 import Never from '../Expiries/Never';
 import Player from '@civ-clone/core-player/Player';
+import PlayerResearch from '@civ-clone/core-science/PlayerResearch';
+import PlayerResearchRegistry from '@civ-clone/core-science/PlayerResearchRegistry';
+import Pottery from '@civ-clone/base-science-advance-pottery/Pottery';
 import Proposal from '../Negotiation/Proposal';
 import Resolution from '../Proposal/Resolution';
 import ResolutionValue from '../Proposal/Resolution';
@@ -20,18 +27,8 @@ import Resolved from '../Rules/Proposal/Resolved';
 import RuleRegistry from '@civ-clone/core-rule/RuleRegistry';
 import Step from '../Rules/Negotiation/Step';
 import Terminate from '../Negotiation/Terminate';
-import { expect } from 'chai';
-import { instance as turnInstance } from '@civ-clone/core-turn-based-game/Turn';
-import PlayerResearchRegistry from '@civ-clone/core-science/PlayerResearchRegistry';
-import PlayerResearch from '@civ-clone/core-science/PlayerResearch';
-import AdvanceRegistry from '@civ-clone/core-science/AdvanceRegistry';
-import Alphabet from '@civ-clone/base-science-advance-alphabet/Alphabet';
-import BronzeWorking from '@civ-clone/base-science-advance-bronzeworking/BronzeWorking';
-import Pottery from '@civ-clone/base-science-advance-pottery/Pottery';
 import TheWheel from '@civ-clone/base-science-advance-thewheel/TheWheel';
-import negotiation from '../Negotiation';
-import Advance from '@civ-clone/core-science/Advance';
-import ChoiceMeta from '@civ-clone/core-client/ChoiceMeta';
+import { expect } from 'chai';
 
 class Peace extends Declaration {}
 class OfferPeace extends Proposal {}
@@ -42,7 +39,6 @@ class AcceptPeaceDialogue extends Dialogue {}
 class DeclinePeaceDialogue extends Dialogue {}
 class AcceptDemandDialogue extends Dialogue {}
 class DeclineDemandDialogue extends Dialogue {}
-class DeclareWar extends Proposal {}
 
 describe('Negotiation', () => {
   it('should handle `Step`s as expected', () => {
@@ -60,7 +56,7 @@ describe('Negotiation', () => {
           (resolution, proposal) =>
             resolution instanceof Decline && proposal instanceof Initiate
         ),
-        new Effect((resolution, proposal) =>
+        new Effect(async (resolution, proposal) =>
           proposal
             .negotiation()
             .proceed(
@@ -77,7 +73,7 @@ describe('Negotiation', () => {
           (resolution, proposal) =>
             resolution instanceof Accept && proposal instanceof OfferPeace
         ),
-        new Effect((resolution, proposal) =>
+        new Effect(async (resolution, proposal) =>
           interactionRegistry.register(
             new Peace(...proposal.players(), new Never(), ruleRegistry)
           )
@@ -89,7 +85,7 @@ describe('Negotiation', () => {
             resolution instanceof Accept &&
             proposal instanceof ExchangeKnowledge
         ),
-        new Effect((resolution, proposal) => {
+        new Effect(async (resolution, proposal) => {
           const byResearch = playerResearchRegistry.getByPlayer(
               resolution.by()
             ),
@@ -109,14 +105,13 @@ describe('Negotiation', () => {
                   !byResearch.completed(completedAdvance.sourceClass())
               );
 
-          // TODO: client.chooseFromList()
           // const byClient = clientRegistry.getByPlayer(resolution.by()),
           //   byAdvance = await byClient.chooseFromList(new ChoiceMeta(byAdvances.map((advance) => advance.sourceClass()), 'diplomacy.exchange-knowledge', resolution)),
           //   forClient = clientRegistry.getByPlayer(resolution.for()[0]),
           //   forAdvance = await forClient.chooseFromList(new ChoiceMeta(forAdvances.map((advance) => advance.sourceClass()), 'diplomacy.exchange-knowledge', resolution));
           //
-          // byResearch.add(byAdvance);
-          // forResearch.add(forAdvance);
+          // byResearch.addAdvance(byAdvance);
+          // forResearch.addAdvance(forAdvance);
 
           byResearch.addAdvance(byAdvances[0].sourceClass());
           forResearch.addAdvance(forAdvances[0].sourceClass());

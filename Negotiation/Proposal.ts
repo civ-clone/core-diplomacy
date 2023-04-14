@@ -12,7 +12,7 @@ import Player from '@civ-clone/core-player/Player';
 export interface IProposal extends IAction {
   choices(): IResolution[];
   resolution(): Resolution | null;
-  resolve(resolution: Resolution): void;
+  resolve(resolution: Resolution): Promise<void>;
   resolved(): boolean;
 }
 
@@ -40,10 +40,12 @@ export class Proposal extends Action implements IProposal {
     return this.#resolution;
   }
 
-  resolve(resolution: Resolution): void {
+  async resolve(resolution: Resolution): Promise<void> {
     this.#resolution = resolution;
 
-    this.ruleRegistry().process(Resolved, resolution, this);
+    await Promise.all(
+      this.ruleRegistry().process(Resolved, resolution, this as Proposal)
+    );
   }
 
   resolved(): boolean {

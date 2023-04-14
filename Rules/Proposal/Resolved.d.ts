@@ -3,6 +3,6 @@ import Proposal from '../../Negotiation/Proposal';
 import Resolution from '../../Proposal/Resolution';
 export declare class Resolved extends Rule<
   [resolution: Resolution, proposal: Proposal],
-  void
+  Promise<void>
 > {}
 export default Resolved;

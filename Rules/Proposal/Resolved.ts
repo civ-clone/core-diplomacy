@@ -4,7 +4,7 @@ import Resolution from '../../Proposal/Resolution';
 
 export class Resolved extends Rule<
   [resolution: Resolution, proposal: Proposal],
-  void
+  Promise<void>
 > {}
 
 export default Resolved;
