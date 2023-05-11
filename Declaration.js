@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Declaration = void 0;
 const Interaction_1 = require("./Interaction");
 const Turn_1 = require("@civ-clone/core-turn-based-game/Turn");
+const Expired_1 = require("./Rules/Declaration/Expired");
 const Expiry_1 = require("./Expiry");
 const Never_1 = require("./Expiries/Never");
 const Player_1 = require("@civ-clone/core-player/Player");
@@ -39,6 +40,7 @@ class Declaration extends Interaction_1.Interaction {
     }
     expire() {
         __classPrivateFieldSet(this, _Declaration_expiry, new Expiry_1.default(__classPrivateFieldGet(this, _Declaration_turn, "f").value()), "f");
+        this.ruleRegistry().process(Expired_1.default, this);
     }
     expired() {
         return __classPrivateFieldGet(this, _Declaration_expiry, "f").expired();

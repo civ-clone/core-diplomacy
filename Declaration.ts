@@ -3,6 +3,7 @@ import {
   Turn,
   instance as turnInstance,
 } from '@civ-clone/core-turn-based-game/Turn';
+import Expired from './Rules/Declaration/Expired';
 import Expiry from './Expiry';
 import Never from './Expiries/Never';
 import Player from '@civ-clone/core-player/Player';
@@ -46,6 +47,8 @@ export class Declaration extends Interaction implements IDeclaration {
 
   expire(): void {
     this.#expiry = new Expiry(this.#turn.value());
+
+    this.ruleRegistry().process(Expired, this);
   }
 
   expired(): boolean {
