@@ -13,8 +13,8 @@ export interface IAction extends IInteraction {
 }
 
 export class Action extends Interaction implements IAction {
-  #by: Player;
-  #negotiation: Negotiation;
+  private _by: Player;
+  private _negotiation: Negotiation;
 
   constructor(
     by: Player,
@@ -23,22 +23,22 @@ export class Action extends Interaction implements IAction {
   ) {
     super(...negotiation.players(), ruleRegistry);
 
-    this.#by = by;
-    this.#negotiation = negotiation;
+    this._by = by;
+    this._negotiation = negotiation;
 
     this.addKey('by', 'for', 'negotiation');
   }
 
   by(): Player {
-    return this.#by;
+    return this._by;
   }
 
   for(): Player[] {
-    return this.players().filter((player) => player !== this.#by);
+    return this.players().filter((player) => player !== this._by);
   }
 
   negotiation(): Negotiation {
-    return this.#negotiation;
+    return this._negotiation;
   }
 }
 

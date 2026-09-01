@@ -6,7 +6,7 @@ export interface IResolution extends IAction {
   proposal(): Proposal;
 }
 export declare class Resolution extends Action implements IResolution {
-  #private;
+  private _proposal;
   constructor(by: Player, proposal: Proposal, ruleRegistry?: RuleRegistry);
   proposal(): Proposal;
 }

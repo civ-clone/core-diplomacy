@@ -17,7 +17,7 @@ export interface IProposal extends IAction {
 }
 
 export class Proposal extends Action implements IProposal {
-  #resolution: Resolution | null = null;
+  private _resolution: Resolution | null = null;
 
   constructor(
     by: Player,
@@ -37,11 +37,11 @@ export class Proposal extends Action implements IProposal {
   }
 
   resolution(): Resolution | null {
-    return this.#resolution;
+    return this._resolution;
   }
 
   async resolve(resolution: Resolution): Promise<void> {
-    this.#resolution = resolution;
+    this._resolution = resolution;
 
     await Promise.all(
       this.ruleRegistry().process(Resolved, resolution, this as Proposal)
@@ -49,7 +49,7 @@ export class Proposal extends Action implements IProposal {
   }
 
   resolved(): boolean {
-    return this.#resolution !== null;
+    return this._resolution !== null;
   }
 }
 

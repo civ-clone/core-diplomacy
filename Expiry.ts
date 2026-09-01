@@ -13,24 +13,24 @@ export interface IExpiry extends IDataObject {
 }
 
 export class Expiry extends DataObject implements IExpiry {
-  #expiry: number;
-  #turn: Turn;
+  private _expiry: number;
+  private _turn: Turn;
 
   constructor(expiry: number, turn: Turn = turnInstance) {
     super();
 
-    this.#expiry = expiry;
-    this.#turn = turn;
+    this._expiry = expiry;
+    this._turn = turn;
 
     this.addKey('expired', 'expiry');
   }
 
   expired(): boolean {
-    return this.#expiry <= this.#turn.value();
+    return this._expiry <= this._turn.value();
   }
 
   expiry(): number {
-    return this.#expiry;
+    return this._expiry;
   }
 }
 

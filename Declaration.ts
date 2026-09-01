@@ -1,8 +1,5 @@
 import { Interaction, IInteraction } from './Interaction';
-import {
-  Turn,
-  instance as turnInstance,
-} from '@civ-clone/core-turn-based-game/Turn';
+import { Turn } from '@civ-clone/core-turn-based-game/Turn';
 import Expired from './Rules/Declaration/Expired';
 import Expiry from './Expiry';
 import Never from './Expiries/Never';
@@ -17,8 +14,7 @@ export interface IDeclaration extends IInteraction {
 }
 
 export class Declaration extends Interaction implements IDeclaration {
-  #expiry: Expiry = new Never();
-  #turn: Turn = turnInstance;
+  private _expiry: Expiry = new Never();
 
   constructor(...args: (Player | Expiry | RuleRegistry | Turn)[]) {
     super(
@@ -32,11 +28,11 @@ export class Declaration extends Interaction implements IDeclaration {
 
     args.forEach((arg) => {
       if (arg instanceof Expiry) {
-        this.#expiry = arg;
+        this._expiry = arg;
       }
 
       if (arg instanceof Turn) {
-        this.#turn = arg;
+        this._turn = arg;
       }
     });
   }
@@ -46,17 +42,17 @@ export class Declaration extends Interaction implements IDeclaration {
   }
 
   expire(): void {
-    this.#expiry = new Expiry(this.#turn.value());
+    this._expiry = new Expiry(this._turn.value());
 
     this.ruleRegistry().process(Expired, this);
   }
 
   expired(): boolean {
-    return this.#expiry.expired();
+    return this._expiry.expired();
   }
 
   expiry(): Expiry {
-    return this.#expiry;
+    return this._expiry;
   }
 }
 

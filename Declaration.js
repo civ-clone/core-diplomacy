@@ -1,16 +1,4 @@
 "use strict";
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
-};
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _Declaration_expiry, _Declaration_turn;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Declaration = void 0;
 const Interaction_1 = require("./Interaction");
@@ -23,15 +11,14 @@ const RuleRegistry_1 = require("@civ-clone/core-rule/RuleRegistry");
 class Declaration extends Interaction_1.Interaction {
     constructor(...args) {
         super(...args.filter((value) => value instanceof Player_1.default || value instanceof RuleRegistry_1.default));
-        _Declaration_expiry.set(this, new Never_1.default());
-        _Declaration_turn.set(this, Turn_1.instance);
+        this._expiry = new Never_1.default();
         this.addKey('expired', 'expiry');
         args.forEach((arg) => {
             if (arg instanceof Expiry_1.default) {
-                __classPrivateFieldSet(this, _Declaration_expiry, arg, "f");
+                this._expiry = arg;
             }
             if (arg instanceof Turn_1.Turn) {
-                __classPrivateFieldSet(this, _Declaration_turn, arg, "f");
+                this._turn = arg;
             }
         });
     }
@@ -39,17 +26,16 @@ class Declaration extends Interaction_1.Interaction {
         return !this.expiry().expired();
     }
     expire() {
-        __classPrivateFieldSet(this, _Declaration_expiry, new Expiry_1.default(__classPrivateFieldGet(this, _Declaration_turn, "f").value()), "f");
+        this._expiry = new Expiry_1.default(this._turn.value());
         this.ruleRegistry().process(Expired_1.default, this);
     }
     expired() {
-        return __classPrivateFieldGet(this, _Declaration_expiry, "f").expired();
+        return this._expiry.expired();
     }
     expiry() {
-        return __classPrivateFieldGet(this, _Declaration_expiry, "f");
+        return this._expiry;
     }
 }
 exports.Declaration = Declaration;
-_Declaration_expiry = new WeakMap(), _Declaration_turn = new WeakMap();
 exports.default = Declaration;
 //# sourceMappingURL=Declaration.js.map

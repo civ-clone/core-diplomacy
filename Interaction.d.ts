@@ -11,7 +11,10 @@ export interface IInteraction extends IDataObject {
   when(): number;
 }
 export declare class Interaction extends DataObject implements IInteraction {
-  #private;
+  private _players;
+  private _ruleRegistry;
+  protected _turn: Turn;
+  private _when;
   constructor(...args: (Player | RuleRegistry | Turn)[]);
   isBetween(...players: Player[]): boolean;
   players(): Player[];

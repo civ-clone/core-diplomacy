@@ -6,7 +6,7 @@ export interface IDialogue extends IProposal {
   key(): string;
 }
 export declare class Dialogue extends Proposal implements IDialogue {
-  #private;
+  private _key;
   constructor(
     by: Player,
     key: string,

@@ -1,10 +1,4 @@
 "use strict";
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _Negotiation_interactions;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Negotiation = void 0;
 const Interaction_1 = require("./Interaction");
@@ -20,7 +14,7 @@ class Negotiation extends Interaction_1.Interaction {
             throw new Unsupported_1.default();
         }
         super(...args);
-        _Negotiation_interactions.set(this, []);
+        this._interactions = [];
         const [initiator] = args.filter((arg) => arg instanceof Player_1.default);
         if (!initiator) {
             throw new Unsupported_1.default('Not enough `Player`s for `Negotiation`.');
@@ -28,13 +22,13 @@ class Negotiation extends Interaction_1.Interaction {
         this.addKey('interactions', 'lastInteraction', 'terminated');
     }
     interactions() {
-        return __classPrivateFieldGet(this, _Negotiation_interactions, "f");
+        return this._interactions;
     }
     lastInteraction() {
-        if (__classPrivateFieldGet(this, _Negotiation_interactions, "f").length === 0) {
+        if (this._interactions.length === 0) {
             return null;
         }
-        return __classPrivateFieldGet(this, _Negotiation_interactions, "f")[__classPrivateFieldGet(this, _Negotiation_interactions, "f").length - 1];
+        return this._interactions[this._interactions.length - 1];
     }
     nextSteps() {
         const nextSteps = this.ruleRegistry().process(Step_1.default, this);
@@ -47,14 +41,13 @@ class Negotiation extends Interaction_1.Interaction {
         if (this.terminated()) {
             throw new Terminated_1.default();
         }
-        __classPrivateFieldGet(this, _Negotiation_interactions, "f").push(nextStep);
+        this._interactions.push(nextStep);
         this.ruleRegistry().process(Interaction_2.default, nextStep, this);
     }
     terminated() {
-        return __classPrivateFieldGet(this, _Negotiation_interactions, "f").some((interaction) => interaction instanceof Terminate_1.default);
+        return this._interactions.some((interaction) => interaction instanceof Terminate_1.default);
     }
 }
 exports.Negotiation = Negotiation;
-_Negotiation_interactions = new WeakMap();
 exports.default = Negotiation;
 //# sourceMappingURL=Negotiation.js.map

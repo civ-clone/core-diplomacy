@@ -11,7 +11,7 @@ export interface IDialogue extends IProposal {
 }
 
 export class Dialogue extends Proposal implements IDialogue {
-  #key: string;
+  private _key: string;
 
   constructor(
     by: Player,
@@ -21,13 +21,13 @@ export class Dialogue extends Proposal implements IDialogue {
   ) {
     super(by, negotiation, ruleRegistry);
 
-    this.#key = key;
+    this._key = key;
 
     this.addKey('key');
   }
 
   key(): string {
-    return this.#key;
+    return this._key;
   }
 }
 

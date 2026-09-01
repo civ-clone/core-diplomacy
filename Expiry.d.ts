@@ -8,7 +8,8 @@ export interface IExpiry extends IDataObject {
   expiry(): number;
 }
 export declare class Expiry extends DataObject implements IExpiry {
-  #private;
+  private _expiry;
+  private _turn;
   constructor(expiry: number, turn?: Turn);
   expired(): boolean;
   expiry(): number;

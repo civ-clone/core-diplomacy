@@ -10,7 +10,7 @@ export interface IProposal extends IAction {
   resolved(): boolean;
 }
 export declare class Proposal extends Action implements IProposal {
-  #private;
+  private _resolution;
   constructor(
     by: Player,
     negotiation: Negotiation,

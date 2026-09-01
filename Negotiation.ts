@@ -18,7 +18,7 @@ export interface INegotiation extends IInteraction {
 }
 
 export class Negotiation extends Interaction implements INegotiation {
-  #interactions: IAction[] = [];
+  private _interactions: IAction[] = [];
 
   constructor(...args: (Player | RuleRegistry)[]) {
     if (
@@ -41,15 +41,15 @@ export class Negotiation extends Interaction implements INegotiation {
   }
 
   interactions(): IAction[] {
-    return this.#interactions;
+    return this._interactions;
   }
 
   lastInteraction(): IAction | null {
-    if (this.#interactions.length === 0) {
+    if (this._interactions.length === 0) {
       return null;
     }
 
-    return this.#interactions[this.#interactions.length - 1];
+    return this._interactions[this._interactions.length - 1];
   }
 
   nextSteps(): IAction[] {
@@ -69,7 +69,7 @@ export class Negotiation extends Interaction implements INegotiation {
       throw new Terminated();
     }
 
-    this.#interactions.push(nextStep);
+    this._interactions.push(nextStep);
 
     this.ruleRegistry().process(
       InteractionRule,
@@ -79,7 +79,7 @@ export class Negotiation extends Interaction implements INegotiation {
   }
 
   terminated(): boolean {
-    return this.#interactions.some(
+    return this._interactions.some(
       (interaction) => interaction instanceof Terminate
     );
   }

@@ -20,33 +20,36 @@ export interface IInteraction extends IDataObject {
 }
 
 export class Interaction extends DataObject implements IInteraction {
-  #players: Set<Player> = new Set();
-  #ruleRegistry: RuleRegistry = ruleRegistryInstance;
-  #turn: Turn = turnInstance;
-  #when: number;
+  private _players: Set<Player> = new Set();
+  private _ruleRegistry: RuleRegistry = ruleRegistryInstance;
+  // `protected` because `Declaration` writes it too. It declared its own
+  // `#turn` before this change; the two slots merge without any behavioural
+  // difference, as this one is read only by the constructor below.
+  protected _turn: Turn = turnInstance;
+  private _when: number;
 
   constructor(...args: (Player | RuleRegistry | Turn)[]) {
     super();
 
     args.forEach((arg) => {
       if (arg instanceof Player) {
-        this.#players.add(arg);
+        this._players.add(arg);
       }
 
       if (arg instanceof RuleRegistry) {
-        this.#ruleRegistry = arg;
+        this._ruleRegistry = arg;
       }
 
       if (arg instanceof Turn) {
-        this.#turn = arg;
+        this._turn = arg;
       }
     });
 
-    this.#when = this.#turn.value();
+    this._when = this._turn.value();
 
     this.addKey('players', 'when');
 
-    this.#ruleRegistry.process(Created, this as Interaction);
+    this._ruleRegistry.process(Created, this as Interaction);
   }
 
   isBetween(...players: Player[]): boolean {
@@ -54,21 +57,21 @@ export class Interaction extends DataObject implements IInteraction {
 
     return (
       uniquePlayers.every((player: Player): boolean =>
-        this.#players.has(player)
-      ) && uniquePlayers.length === this.#players.size
+        this._players.has(player)
+      ) && uniquePlayers.length === this._players.size
     );
   }
 
   players(): Player[] {
-    return Array.from(this.#players);
+    return Array.from(this._players);
   }
 
   protected ruleRegistry(): RuleRegistry {
-    return this.#ruleRegistry;
+    return this._ruleRegistry;
   }
 
   when(): number {
-    return this.#when;
+    return this._when;
   }
 }
 

@@ -10,7 +10,7 @@ export interface INegotiation extends IInteraction {
   terminated(): boolean;
 }
 export declare class Negotiation extends Interaction implements INegotiation {
-  #private;
+  private _interactions;
   constructor(...args: (Player | RuleRegistry)[]);
   interactions(): IAction[];
   lastInteraction(): IAction | null;

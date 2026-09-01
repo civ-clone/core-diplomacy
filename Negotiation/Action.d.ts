@@ -8,7 +8,8 @@ export interface IAction extends IInteraction {
   negotiation(): Negotiation;
 }
 export declare class Action extends Interaction implements IAction {
-  #private;
+  private _by;
+  private _negotiation;
   constructor(
     by: Player,
     negotiation: Negotiation,

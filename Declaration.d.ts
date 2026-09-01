@@ -10,7 +10,7 @@ export interface IDeclaration extends IInteraction {
   expiry(): Expiry;
 }
 export declare class Declaration extends Interaction implements IDeclaration {
-  #private;
+  private _expiry;
   constructor(...args: (Player | Expiry | RuleRegistry | Turn)[]);
   active(): boolean;
   expire(): void;

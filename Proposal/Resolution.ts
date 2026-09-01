@@ -11,7 +11,7 @@ export interface IResolution extends IAction {
 }
 
 export class Resolution extends Action implements IResolution {
-  #proposal: Proposal;
+  private _proposal: Proposal;
 
   constructor(
     by: Player,
@@ -20,13 +20,13 @@ export class Resolution extends Action implements IResolution {
   ) {
     super(by, proposal.negotiation(), ruleRegistry);
 
-    this.#proposal = proposal;
+    this._proposal = proposal;
 
     this.addKey('proposal');
   }
 
   proposal(): Proposal {
-    return this.#proposal;
+    return this._proposal;
   }
 }
 
