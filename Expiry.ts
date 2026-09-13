@@ -13,6 +13,7 @@ export interface IExpiry extends IDataObject {
 }
 
 export class Expiry extends DataObject implements IExpiry {
+  static readonly transient = ['_turn'];
   private _expiry: number;
   private _turn: Turn;
 

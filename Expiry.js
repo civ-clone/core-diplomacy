@@ -18,5 +18,6 @@ class Expiry extends DataObject_1.DataObject {
     }
 }
 exports.Expiry = Expiry;
+Expiry.transient = ['_turn'];
 exports.default = Expiry;
 //# sourceMappingURL=Expiry.js.map
