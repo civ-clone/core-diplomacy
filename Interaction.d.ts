@@ -11,6 +11,7 @@ export interface IInteraction extends IDataObject {
   when(): number;
 }
 export declare class Interaction extends DataObject implements IInteraction {
+  static readonly transient?: readonly string[];
   private _players;
   private _ruleRegistry;
   protected _turn: Turn;

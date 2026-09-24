@@ -45,5 +45,8 @@ class Interaction extends DataObject_1.DataObject {
     }
 }
 exports.Interaction = Interaction;
+// Both are supplied by the loading game, not the file: saving the registry
+// wrote every rule into the save, and saving the turn restored a stale one.
+Interaction.transient = ['_ruleRegistry', '_turn'];
 exports.default = Interaction;
 //# sourceMappingURL=Interaction.js.map

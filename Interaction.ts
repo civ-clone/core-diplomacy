@@ -20,6 +20,10 @@ export interface IInteraction extends IDataObject {
 }
 
 export class Interaction extends DataObject implements IInteraction {
+  // Both are supplied by the loading game, not the file: saving the registry
+  // wrote every rule into the save, and saving the turn restored a stale one.
+  static readonly transient?: readonly string[] = ['_ruleRegistry', '_turn'];
+
   private _players: Set<Player> = new Set();
   private _ruleRegistry: RuleRegistry = ruleRegistryInstance;
   // `protected` because `Declaration` writes it too. It declared its own
