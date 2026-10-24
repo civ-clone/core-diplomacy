@@ -25,9 +25,14 @@ class Declaration extends Interaction_1.Interaction {
     active() {
         return !this.expiry().expired();
     }
-    expire() {
+    /**
+     * Ends the declaration. `by` is the player who ended it, if one did, for the
+     * `Expired` rules to say so. It isn't kept: once it has been announced, a
+     * declaration only needs to know that it ended, and when.
+     */
+    expire(by = null) {
         this._expiry = new Expiry_1.default(this._turn.value());
-        this.ruleRegistry().process(Expired_1.default, this);
+        this.ruleRegistry().process(Expired_1.default, this, by);
     }
     expired() {
         return this._expiry.expired();

@@ -8,7 +8,7 @@ import RuleRegistry from '@civ-clone/core-rule/RuleRegistry';
 
 export interface IDeclaration extends IInteraction {
   active(): boolean;
-  expire(): void;
+  expire(by?: Player | null): void;
   expired(): boolean;
   expiry(): Expiry;
 }
@@ -41,10 +41,15 @@ export class Declaration extends Interaction implements IDeclaration {
     return !this.expiry().expired();
   }
 
-  expire(): void {
+  /**
+   * Ends the declaration. `by` is the player who ended it, if one did, for the
+   * `Expired` rules to say so. It isn't kept: once it has been announced, a
+   * declaration only needs to know that it ended, and when.
+   */
+  expire(by: Player | null = null): void {
     this._expiry = new Expiry(this._turn.value());
 
-    this.ruleRegistry().process(Expired, this);
+    this.ruleRegistry().process(Expired, this, by);
   }
 
   expired(): boolean {
