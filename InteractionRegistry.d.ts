@@ -12,6 +12,7 @@ export declare class InteractionRegistry
   extends EntityRegistry<IInteraction>
   implements IInteractionRegistry
 {
+  private _byPlayers;
   constructor();
   getByPlayer(player: Player): IInteraction[];
   getByPlayers(...players: Player[]): IInteraction[];
