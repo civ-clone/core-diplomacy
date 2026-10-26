@@ -1,3 +1,4 @@
+import Declaration from '../Declaration';
 import Interaction from '../Interaction';
 import InteractionRegistry from '../InteractionRegistry';
 import Player from '@civ-clone/core-player/Player';
@@ -70,6 +71,40 @@ describe('InteractionRegistry', (): void => {
     interactionRegistry.unregister(first);
 
     expect(interactionRegistry.getByPlayers(a, b)).to.deep.equal([second]);
+  });
+
+  it('should find only interactions without players when given none, as `isBetween` does', (): void => {
+    const { a, b, between, interactionRegistry } = setUp(),
+      none = between(),
+      ab = between(a, b);
+
+    interactionRegistry.register(none, ab);
+
+    expect(interactionRegistry.getByPlayers()).to.deep.equal([none]);
+  });
+
+  it('should find a `Declaration` between the players it was made for', (): void => {
+    const { a, b, interactionRegistry } = setUp(),
+      declaration = new Declaration(a, b, new RuleRegistry(), new Turn());
+
+    interactionRegistry.register(declaration);
+
+    expect(interactionRegistry.getByPlayers(b, a)).to.deep.equal([declaration]);
+  });
+
+  it('should find an interaction registered again in its new place', (): void => {
+    const { a, b, between, interactionRegistry } = setUp(),
+      first = between(a, b),
+      second = between(a, b);
+
+    interactionRegistry.register(first, second);
+    interactionRegistry.unregister(first);
+    interactionRegistry.register(first);
+
+    expect(interactionRegistry.getByPlayers(a, b)).to.deep.equal([
+      second,
+      first,
+    ]);
   });
 
   it('should not let a caller change what it finds', (): void => {
