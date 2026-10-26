@@ -10,10 +10,22 @@ export interface IInteractionRegistry extends IEntityRegistry<IInteraction> {
   getByPlayers(...players: Player[]): IInteraction[];
 }
 
+// The same players, in any order and counted once, give the same key, as `isBetween` compares them as a set.
+const playersKey = (players: Player[]): string =>
+  Array.from(new Set(players.map((player: Player): string => player.id())))
+    .sort()
+    .join('\u0000');
+
 export class InteractionRegistry
   extends EntityRegistry<IInteraction>
   implements IInteractionRegistry
 {
+  // An interaction's players are set when it's made and never change. Scanning every interaction for each lookup was
+  //  most of a late-game turn, as route finding asks about a treaty on each step (civ-clone/web-renderer#657).
+  private _byPlayers = this.index((interaction: IInteraction): string =>
+    playersKey(interaction.players())
+  );
+
   constructor() {
     super(Interaction);
   }
@@ -25,9 +37,7 @@ export class InteractionRegistry
   }
 
   getByPlayers(...players: Player[]): IInteraction[] {
-    return this.entries().filter((interaction: IInteraction): boolean =>
-      interaction.isBetween(...players)
-    );
+    return this._byPlayers.get(playersKey(players));
   }
 }
 
