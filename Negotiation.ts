@@ -7,9 +7,11 @@ import Player from '@civ-clone/core-player/Player';
 import Step from './Rules/Negotiation/Step';
 import Terminate from './Negotiation/Terminate';
 import Terminated from './Negotiation/Error/Terminated';
+import TerminatedRule from './Rules/Negotiation/Terminated';
 import Unsupported from './Negotiation/Error/Unsupported';
 
 export interface INegotiation extends IInteraction {
+  initiator(): Player;
   interactions(): IAction[];
   lastInteraction(): IAction | null;
   nextSteps(): IAction[];
@@ -40,6 +42,14 @@ export class Negotiation extends Interaction implements INegotiation {
     this.addKey('interactions', 'lastInteraction', 'terminated');
   }
 
+  /**
+   * The player who opened the negotiation: the first of the players it was made with. Either player may open one; the
+   *  other answers. The players keep the order they were given in, in a saved game too.
+   */
+  initiator(): Player {
+    return this.players()[0];
+  }
+
   interactions(): IAction[] {
     return this._interactions;
   }
@@ -57,7 +67,7 @@ export class Negotiation extends Interaction implements INegotiation {
 
     if (nextSteps.length === 0) {
       nextSteps.push(
-        new Terminate(this.players()[0], this, this.ruleRegistry())
+        new Terminate(this.initiator(), this, this.ruleRegistry())
       );
     }
 
@@ -76,6 +86,12 @@ export class Negotiation extends Interaction implements INegotiation {
       nextStep as IInteraction,
       this
     );
+
+    // After the step's own rules, so the ending is heard once it's recorded and registered. A `Interaction` rule that
+    //  throws on the ending step stops this too, as the negotiation has ended either way.
+    if (nextStep instanceof Terminate) {
+      this.ruleRegistry().process(TerminatedRule, this);
+    }
   }
 
   terminated(): boolean {

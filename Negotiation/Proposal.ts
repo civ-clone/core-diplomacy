@@ -5,6 +5,10 @@ import {
   instance as ruleRegistryInstance,
 } from '@civ-clone/core-rule/RuleRegistry';
 import Negotiation from '../Negotiation';
+import Accept from '../Proposal/Accept';
+import Accepted from '../Rules/Proposal/Accepted';
+import Decline from '../Proposal/Decline';
+import Declined from '../Rules/Proposal/Declined';
 import Step from '../Rules/Negotiation/Step';
 import Resolved from '../Rules/Proposal/Resolved';
 import Player from '@civ-clone/core-player/Player';
@@ -46,6 +50,16 @@ export class Proposal extends Action implements IProposal {
     await Promise.all(
       this.ruleRegistry().process(Resolved, resolution, this as Proposal)
     );
+
+    // Once its effects have happened: an accepted proposal has been carried out by the time `Accepted` is heard.
+    //  `Acknowledge` and `Abstain` are neither.
+    if (resolution instanceof Accept) {
+      this.ruleRegistry().process(Accepted, this as Proposal);
+    }
+
+    if (resolution instanceof Decline) {
+      this.ruleRegistry().process(Declined, this as Proposal);
+    }
   }
 
   resolved(): boolean {
