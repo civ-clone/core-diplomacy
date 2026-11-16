@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Proposal = void 0;
 const Action_1 = require("./Action");
 const RuleRegistry_1 = require("@civ-clone/core-rule/RuleRegistry");
+const Accept_1 = require("../Proposal/Accept");
+const Accepted_1 = require("../Rules/Proposal/Accepted");
+const Decline_1 = require("../Proposal/Decline");
+const Declined_1 = require("../Rules/Proposal/Declined");
 const Step_1 = require("../Rules/Negotiation/Step");
 const Resolved_1 = require("../Rules/Proposal/Resolved");
 class Proposal extends Action_1.Action {
@@ -20,6 +24,23 @@ class Proposal extends Action_1.Action {
     async resolve(resolution) {
         this._resolution = resolution;
         await Promise.all(this.ruleRegistry().process(Resolved_1.default, resolution, this));
+        // Once its effects have happened: an accepted proposal has been carried out by the time `Accepted` is heard.
+        //  `Acknowledge` and `Abstain` are neither.
+        //  They're awaited as `Resolved` is, so a handler that throws or rejects rejects `resolve` too.
+        if (resolution instanceof Accept_1.default) {
+            const accepted = this.ruleRegistry().process(Accepted_1.default, this);
+            // Only when a rule answered, so that with none the timing is as it was.
+            if (accepted.length > 0) {
+                await Promise.all(accepted);
+            }
+        }
+        if (resolution instanceof Decline_1.default) {
+            const declined = this.ruleRegistry().process(Declined_1.default, this);
+            // Only when a rule answered, so that with none the timing is as it was.
+            if (declined.length > 0) {
+                await Promise.all(declined);
+            }
+        }
     }
     resolved() {
         return this._resolution !== null;
