@@ -87,8 +87,10 @@ export class Negotiation extends Interaction implements INegotiation {
       this
     );
 
-    // After the step's own rules, so the ending is heard once it's recorded and registered. A `Interaction` rule that
-    //  throws on the ending step stops this too, as the negotiation has ended either way.
+    // After the step's own rules (which, in the rule sets, register the step), and before the caller registers the
+    //  negotiation itself: the drivers register it once its loop ends. `proceed` isn't async, so a `Terminated` rule
+    //  that returns a promise isn't awaited; one that throws throws from `proceed`, as an `Interaction` rule does, and
+    //  the negotiation has ended either way.
     if (nextStep instanceof Terminate) {
       this.ruleRegistry().process(TerminatedRule, this);
     }

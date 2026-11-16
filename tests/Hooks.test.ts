@@ -149,4 +149,84 @@ describe('Negotiation and Proposal hooks', (): void => {
     expect(step).to.be.instanceOf(Initiate);
     expect(step.by()).to.equal(b);
   });
+
+  it('waits for `Accepted` and `Declined` handlers that return promises', async (): Promise<void> => {
+    const { a, b, heard, ruleRegistry } = setUp(),
+      later = (text: string) =>
+        new Promise<void>((resolve) =>
+          setTimeout(() => {
+            heard.push(text);
+            resolve();
+          }, 5)
+        );
+
+    ruleRegistry.register(
+      new Accepted(new Effect(() => later('accepted'))),
+      new Declined(new Effect(() => later('declined')))
+    );
+
+    const negotiation = new Negotiation(a, b, ruleRegistry),
+      offer = new OfferPeace(a, negotiation, ruleRegistry),
+      other = new OfferPeace(b, negotiation, ruleRegistry);
+
+    await offer.resolve(new Accept(b, offer, ruleRegistry));
+
+    expect(heard).to.deep.equal(['accepted']);
+
+    await other.resolve(new Decline(a, other, ruleRegistry));
+
+    expect(heard).to.deep.equal(['accepted', 'declined']);
+  });
+
+  it('rejects `resolve` when an `Accepted` handler throws, once the effects have happened', async (): Promise<void> => {
+    const { a, b, heard, ruleRegistry } = setUp();
+
+    ruleRegistry.register(
+      new Resolved(
+        new Effect(async () => {
+          heard.push('resolved');
+        })
+      ),
+      new Accepted(
+        new Effect(() => {
+          throw new Error('accepted failed');
+        })
+      )
+    );
+
+    const negotiation = new Negotiation(a, b, ruleRegistry),
+      offer = new OfferPeace(a, negotiation, ruleRegistry),
+      accept = new Accept(b, offer, ruleRegistry);
+
+    let error: unknown = null;
+
+    try {
+      await offer.resolve(accept);
+    } catch (reason) {
+      error = reason;
+    }
+
+    expect((error as Error).message).to.equal('accepted failed');
+    expect(heard).to.deep.equal(['resolved']);
+    expect(offer.resolution()).to.equal(accept);
+  });
+
+  it('throws from `proceed` when a `Terminated` handler throws, with the negotiation ended', (): void => {
+    const { a, b, ruleRegistry } = setUp();
+
+    ruleRegistry.register(
+      new Terminated(
+        new Effect(() => {
+          throw new Error('terminated failed');
+        })
+      )
+    );
+
+    const negotiation = new Negotiation(a, b, ruleRegistry);
+
+    expect(() =>
+      negotiation.proceed(new Terminate(a, negotiation, ruleRegistry))
+    ).to.throw('terminated failed');
+    expect(negotiation.terminated()).to.equal(true);
+  });
 });

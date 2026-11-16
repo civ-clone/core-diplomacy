@@ -26,11 +26,12 @@ class Proposal extends Action_1.Action {
         await Promise.all(this.ruleRegistry().process(Resolved_1.default, resolution, this));
         // Once its effects have happened: an accepted proposal has been carried out by the time `Accepted` is heard.
         //  `Acknowledge` and `Abstain` are neither.
+        //  They're awaited as `Resolved` is, so a handler that throws or rejects rejects `resolve` too.
         if (resolution instanceof Accept_1.default) {
-            this.ruleRegistry().process(Accepted_1.default, this);
+            await Promise.all(this.ruleRegistry().process(Accepted_1.default, this));
         }
         if (resolution instanceof Decline_1.default) {
-            this.ruleRegistry().process(Declined_1.default, this);
+            await Promise.all(this.ruleRegistry().process(Declined_1.default, this));
         }
     }
     resolved() {

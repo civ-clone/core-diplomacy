@@ -53,12 +53,17 @@ export class Proposal extends Action implements IProposal {
 
     // Once its effects have happened: an accepted proposal has been carried out by the time `Accepted` is heard.
     //  `Acknowledge` and `Abstain` are neither.
+    //  They're awaited as `Resolved` is, so a handler that throws or rejects rejects `resolve` too.
     if (resolution instanceof Accept) {
-      this.ruleRegistry().process(Accepted, this as Proposal);
+      await Promise.all(
+        this.ruleRegistry().process(Accepted, this as Proposal)
+      );
     }
 
     if (resolution instanceof Decline) {
-      this.ruleRegistry().process(Declined, this as Proposal);
+      await Promise.all(
+        this.ruleRegistry().process(Declined, this as Proposal)
+      );
     }
   }
 
