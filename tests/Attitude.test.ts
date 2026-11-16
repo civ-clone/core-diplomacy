@@ -132,4 +132,9 @@ describe('Attitude', (): void => {
       new Attitude(interactionRegistry, ruleRegistry, turn).get(a, b)
     ).to.equal(8);
   });
+
+  it('refuses a range whose minimum is above its maximum', (): void => {
+    expect(() => setUp({ minimum: 10, maximum: 0 })).to.throw(RangeError);
+    expect(() => setUp({ minimum: 5, maximum: 5 })).not.to.throw();
+  });
 });

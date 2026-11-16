@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReputationRecord = void 0;
-const Interaction_1 = require("../Interaction");
+const RelationRecord_1 = require("./RelationRecord");
 /**
  * A player's reputation, kept in the `InteractionRegistry` so that it's saved with the rest of the diplomacy. Made the
  *  first time a value is set (`Reputation`), so a game that never sets one has none.
  */
-class ReputationRecord extends Interaction_1.Interaction {
+class ReputationRecord extends RelationRecord_1.RelationRecord {
     constructor(player, value, ...args) {
         super(player, ...args);
         this._player = player;

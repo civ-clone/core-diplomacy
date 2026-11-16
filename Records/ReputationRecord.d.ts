@@ -1,8 +1,8 @@
-import { Interaction, IInteraction } from '../Interaction';
+import { IRelationRecord, RelationRecord } from './RelationRecord';
 import Player from '@civ-clone/core-player/Player';
 import RuleRegistry from '@civ-clone/core-rule/RuleRegistry';
 import { Turn } from '@civ-clone/core-turn-based-game/Turn';
-export interface IReputationRecord extends IInteraction {
+export interface IReputationRecord extends IRelationRecord {
   player(): Player;
   setValue(value: number): void;
   value(): number;
@@ -12,7 +12,7 @@ export interface IReputationRecord extends IInteraction {
  *  first time a value is set (`Reputation`), so a game that never sets one has none.
  */
 export declare class ReputationRecord
-  extends Interaction
+  extends RelationRecord
   implements IReputationRecord
 {
   private _player;

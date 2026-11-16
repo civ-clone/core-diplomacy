@@ -1,4 +1,4 @@
-import { Bounds, clamp } from './Bounds';
+import { Bounds, assertBounds, clamp } from './Bounds';
 import {
   InteractionRegistry,
   instance as interactionRegistryInstance,
@@ -41,6 +41,8 @@ export class Attitude {
     turn: Turn = turnInstance,
     options: AttitudeOptions = {}
   ) {
+    assertBounds(options);
+
     this._interactionRegistry = interactionRegistry;
     this._options = options;
     this._ruleRegistry = ruleRegistry;

@@ -5,6 +5,7 @@ export interface Bounds {
   maximum?: number;
   minimum?: number;
 }
+export declare const assertBounds: ({ maximum, minimum }: Bounds) => void;
 export declare const clamp: (
   value: number,
   { maximum, minimum }: Bounds

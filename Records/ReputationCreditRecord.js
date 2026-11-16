@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReputationCreditRecord = void 0;
-const Interaction_1 = require("../Interaction");
+const RelationRecord_1 = require("./RelationRecord");
 /**
  * The credit `observer` gives `player` against their reputation: one direction of one pair, kept in the
  *  `InteractionRegistry` so that it's saved with the rest of the diplomacy. Made the first time a value is set
  *  (`Reputation`), so a game that never sets one has none.
  */
-class ReputationCreditRecord extends Interaction_1.Interaction {
+class ReputationCreditRecord extends RelationRecord_1.RelationRecord {
     constructor(observer, player, value, ...args) {
         super(observer, player, ...args);
         this._observer = observer;

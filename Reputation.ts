@@ -1,4 +1,4 @@
-import { Bounds, clamp } from './Bounds';
+import { Bounds, assertBounds, clamp } from './Bounds';
 import {
   InteractionRegistry,
   instance as interactionRegistryInstance,
@@ -24,7 +24,7 @@ export interface ReputationOptions extends Bounds {
 /**
  * Each player's reputation, and the credit each other player gives them against it. What the numbers mean is the rule
  *  set's: the range of a reputation is `options`, and with none given any number is kept. A credit is kept as it's
- *  given, and is 0 until one is.
+ *  given, unclamped and unannounced, and is 0 until one is.
  *
  * The values are `ReputationRecord`s and `ReputationCreditRecord`s in the `InteractionRegistry`, made the first time
  *  one is set, so they're saved with the rest of the diplomacy and a game that never sets one has none. Each change to
@@ -42,6 +42,8 @@ export class Reputation {
     turn: Turn = turnInstance,
     options: ReputationOptions = {}
   ) {
+    assertBounds(options);
+
     this._interactionRegistry = interactionRegistry;
     this._options = options;
     this._ruleRegistry = ruleRegistry;
@@ -95,7 +97,9 @@ export class Reputation {
   }
 
   /**
-   * Sets the credit `observer` gives `player` against their reputation.
+   * Sets the credit `observer` gives `player` against their reputation. A credit is kept as it's given, outside the
+   *  reputation's range, and isn't announced: what limits it (the original keeps it between 0 and the reputation) is
+   *  the rule set's.
    */
   setCredit(observer: Player, player: Player, value: number): void {
     const record = this.creditRecord(observer, player);

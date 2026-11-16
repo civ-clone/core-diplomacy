@@ -1,8 +1,8 @@
-import { Interaction, IInteraction } from '../Interaction';
+import { IRelationRecord, RelationRecord } from './RelationRecord';
 import Player from '@civ-clone/core-player/Player';
 import RuleRegistry from '@civ-clone/core-rule/RuleRegistry';
 import { Turn } from '@civ-clone/core-turn-based-game/Turn';
-export interface IAttitudeRecord extends IInteraction {
+export interface IAttitudeRecord extends IRelationRecord {
   holder(): Player;
   setValue(value: number): void;
   toward(): Player;
@@ -14,7 +14,7 @@ export interface IAttitudeRecord extends IInteraction {
  *  none.
  */
 export declare class AttitudeRecord
-  extends Interaction
+  extends RelationRecord
   implements IAttitudeRecord
 {
   private _holder;

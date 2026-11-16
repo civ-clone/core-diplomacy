@@ -112,4 +112,30 @@ describe('Reputation', (): void => {
       [a, 1, 3, undefined],
     ]);
   });
+
+  it('refuses a range whose minimum is above its maximum', (): void => {
+    expect(() => setUp({ minimum: 1, maximum: 0 })).to.throw(RangeError);
+  });
+
+  it('keeps a credit as it is given, outside the range and unannounced', (): void => {
+    const { a, b, reputation, ruleRegistry } = setUp({
+        minimum: 0,
+        maximum: 3,
+      }),
+      heard: unknown[] = [];
+
+    ruleRegistry.register(
+      new ReputationChanged(
+        new Effect((...args) => {
+          heard.push(args);
+        })
+      )
+    );
+
+    reputation.setCredit(a, b, 10);
+    reputation.setCredit(a, b, -4);
+
+    expect(reputation.credit(a, b)).to.equal(-4);
+    expect(heard).to.deep.equal([]);
+  });
 });

@@ -1,9 +1,9 @@
-import { Interaction, IInteraction } from '../Interaction';
+import { IRelationRecord, RelationRecord } from './RelationRecord';
 import Player from '@civ-clone/core-player/Player';
 import RuleRegistry from '@civ-clone/core-rule/RuleRegistry';
 import { Turn } from '@civ-clone/core-turn-based-game/Turn';
 
-export interface IAttitudeRecord extends IInteraction {
+export interface IAttitudeRecord extends IRelationRecord {
   holder(): Player;
   setValue(value: number): void;
   toward(): Player;
@@ -15,7 +15,7 @@ export interface IAttitudeRecord extends IInteraction {
  *  with the rest of the diplomacy. Made the first time a value is set (`Attitude`), so a game that never sets one has
  *  none.
  */
-export class AttitudeRecord extends Interaction implements IAttitudeRecord {
+export class AttitudeRecord extends RelationRecord implements IAttitudeRecord {
   private _holder: Player;
   private _toward: Player;
   private _value: number;

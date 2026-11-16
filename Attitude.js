@@ -18,6 +18,7 @@ const AttitudeRecord_1 = require("./Records/AttitudeRecord");
  */
 class Attitude {
     constructor(interactionRegistry = InteractionRegistry_1.instance, ruleRegistry = RuleRegistry_1.instance, turn = Turn_1.instance, options = {}) {
+        (0, Bounds_1.assertBounds)(options);
         this._interactionRegistry = interactionRegistry;
         this._options = options;
         this._ruleRegistry = ruleRegistry;
