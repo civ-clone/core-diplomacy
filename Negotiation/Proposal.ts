@@ -55,15 +55,21 @@ export class Proposal extends Action implements IProposal {
     //  `Acknowledge` and `Abstain` are neither.
     //  They're awaited as `Resolved` is, so a handler that throws or rejects rejects `resolve` too.
     if (resolution instanceof Accept) {
-      await Promise.all(
-        this.ruleRegistry().process(Accepted, this as Proposal)
-      );
+      const accepted = this.ruleRegistry().process(Accepted, this as Proposal);
+
+      // Only when a rule answered, so that with none the timing is as it was.
+      if (accepted.length > 0) {
+        await Promise.all(accepted);
+      }
     }
 
     if (resolution instanceof Decline) {
-      await Promise.all(
-        this.ruleRegistry().process(Declined, this as Proposal)
-      );
+      const declined = this.ruleRegistry().process(Declined, this as Proposal);
+
+      // Only when a rule answered, so that with none the timing is as it was.
+      if (declined.length > 0) {
+        await Promise.all(declined);
+      }
     }
   }
 

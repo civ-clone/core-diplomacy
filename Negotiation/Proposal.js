@@ -28,10 +28,18 @@ class Proposal extends Action_1.Action {
         //  `Acknowledge` and `Abstain` are neither.
         //  They're awaited as `Resolved` is, so a handler that throws or rejects rejects `resolve` too.
         if (resolution instanceof Accept_1.default) {
-            await Promise.all(this.ruleRegistry().process(Accepted_1.default, this));
+            const accepted = this.ruleRegistry().process(Accepted_1.default, this);
+            // Only when a rule answered, so that with none the timing is as it was.
+            if (accepted.length > 0) {
+                await Promise.all(accepted);
+            }
         }
         if (resolution instanceof Decline_1.default) {
-            await Promise.all(this.ruleRegistry().process(Declined_1.default, this));
+            const declined = this.ruleRegistry().process(Declined_1.default, this);
+            // Only when a rule answered, so that with none the timing is as it was.
+            if (declined.length > 0) {
+                await Promise.all(declined);
+            }
         }
     }
     resolved() {

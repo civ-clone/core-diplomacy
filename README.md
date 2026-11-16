@@ -15,7 +15,8 @@ Contains base entities for basic diplomacy.
   `ReputationCreditRecord` interactions in the `InteractionRegistry`, made the first time one is set, so a game that
   never sets one has none, and a game that does saves them with the rest of its diplomacy. All three are
   `RelationRecord`s: values kept about players, not something that happened between them. **A reader that takes any
-  interaction between two players as a sign they've met must skip `RelationRecord`s.** To load a save that has them,
+  interaction between two players as a sign they've met must skip `RelationRecord`s.** Like any interaction, each record runs
+  the `Created` rules when it's made, and `getByPlayers`/`getByPlayer` return it. To load a save that has them,
   the loading game must register the three classes (core-save-game's `registerClasses`, or a rule set's own).
 
 ## `Rule`s to help manage some of the above entities
